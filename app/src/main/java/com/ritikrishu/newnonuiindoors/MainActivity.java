@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements IndoorsServiceCal
     }
 
     public void start(View v){
-        IndoorsFactory.createInstance(this, "insert api key", this, false);
+        IndoorsFactory.createInstance(this, /*todo*/"insert api key", this, false);
     }
     public void stop(View v){
         super.onStop();
@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements IndoorsServiceCal
 
         indoors.registerLocationListener(this);
 
-        indoors.setLocatedCloudBuilding(0/*insert building id*/, new LocalizationParameters(), true);
+        indoors.setLocatedCloudBuilding(0/*todo change with actual building id*/, new LocalizationParameters(), true);
     }
 
     @Override
