@@ -31,6 +31,8 @@
         <service
             android:name="com.customlbs.service.Worker"
             android:process=":remote"/>
+        <service android:name=".BackgroundService"/>
+        <service android:name=".LocalService"/>
     </application>
 
 </manifest>

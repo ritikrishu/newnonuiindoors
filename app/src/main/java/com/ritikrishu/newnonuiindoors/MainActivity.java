@@ -1,6 +1,7 @@
 package com.ritikrishu.newnonuiindoors;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.support.v4.app.ActivityCompat;
@@ -24,10 +25,11 @@ import com.customlbs.shared.Coordinate;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements IndoorsServiceCallback, IndoorsLocationListener {
+public class MainActivity extends AppCompatActivity {
 
     private Indoors indoors;
     public static final String TAG = "SGIND";
+    Building mBuilding;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,75 +60,13 @@ public class MainActivity extends AppCompatActivity implements IndoorsServiceCal
     }
 
     public void start(View v){
-        IndoorsFactory.createInstance(this, /*todo*/"insert api key", this, false);
+        Intent i = new Intent(this, BackgroundService.class);
+        i.putExtra("ss", true);
+        startService(i);
     }
     public void stop(View v){
-        super.onStop();
-
-        indoors.removeLocationListener(this);
-
-        IndoorsFactory.releaseInstance(this);
-    }
-
-    @Override
-    public void loadingBuilding(LoadingBuildingStatus loadingBuildingStatus) {
-        Log.d(TAG, loadingBuildingStatus.getPhase() + " <- loading");
-    }
-
-    @Override
-    public void buildingLoaded(Building building) {
-        Log.d(TAG, building.getName() + " <- building loaded");
-    }
-
-    @Override
-    public void leftBuilding(Building building) {
-        Log.d(TAG, building.getName() + " <- building left");
-    }
-
-    @Override
-    public void buildingReleased(Building building) {
-        Log.d(TAG, building.getName() + " <- building released");
-    }
-
-    @Override
-    public void positionUpdated(Coordinate coordinate, int i) {
-        Location geoLocation = IndoorsCoordinateUtil.toGeoLocation(coordinate, mBuilding);
-        Log.d(TAG, coordinate.x + " -- " + coordinate.y + " <- positionUpdated x -- y");
-        Log.d(TAG, geoLocation.getLatitude() + " -- " + geoLocation.getLongitude() + " <- positionUpdated lat -- lng");
-    }
-
-    @Override
-    public void orientationUpdated(float v) {
-        Log.d(TAG, v + " <- orientationUpdated");
-    }
-
-    @Override
-    public void changedFloor(int i, String s) {
-        Log.d(TAG, s + " -- " + i + " <- changedFloor");
-    }
-
-    @Override
-    public void enteredZones(List<Zone> list) {
-        Log.d(TAG, list.size() + " <- enteredZones list size");
-    }
-
-    @Override
-    public void buildingLoadingCanceled() {
-        Log.d(TAG,"buildingLoadingCanceled");
-    }
-
-    @Override
-    public void connected() {
-        indoors = IndoorsFactory.getInstance();
-
-        indoors.registerLocationListener(this);
-
-        indoors.setLocatedCloudBuilding(0/*todo change with actual building id*/, new LocalizationParameters(), true);
-    }
-
-    @Override
-    public void onError(IndoorsException e) {
-        Log.d(TAG,"onError -> ");
-        e.printStackTrace();
+        Intent i = new Intent(this, BackgroundService.class);
+        i.putExtra("ss", false);
+        stopService(i);
     }
 }
