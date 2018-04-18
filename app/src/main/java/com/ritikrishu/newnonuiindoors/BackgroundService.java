@@ -29,26 +29,6 @@ import com.customlbs.shared.Coordinate;
 import java.util.List;
 
 public class BackgroundService extends NonStopIntentService {
-    Messenger mService;
-    boolean mBound = false;
-
-    private ServiceConnection mConnection = new ServiceConnection() {
-
-        @Override
-        public void onServiceConnected(ComponentName className,
-                                       IBinder service) {
-            // We've bound to LocalService, cast the IBinder and get LocalService instance
-            mService = new Messenger(service);
-            mBound = true;
-            start();
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName arg0) {
-            mService = null;
-            mBound = false;
-        }
-    };
 
 
     public BackgroundService() {
@@ -58,18 +38,7 @@ public class BackgroundService extends NonStopIntentService {
     @Override
     public void onCreate() {
         super.onCreate();
-        Intent intent = new Intent(this, LocalService.class);
-        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-    }
-
-    @Override
-    public void onDestroy() {
-        if (mBound) {
-            stop();
-            unbindService(mConnection);
-            mBound = false;
-        }
-        super.onDestroy();
+        start();
     }
 
     @Override
@@ -82,19 +51,25 @@ public class BackgroundService extends NonStopIntentService {
         }
     }
 
-    public void start() {
+    @Override
+    public void onDestroy() {
+        stop();
+        super.onDestroy();
+    }
+
+    public void start(){
         Message msg = Message.obtain(null, LocalService.START, 0, 0);
         try {
-            mService.send(msg);
+            MainApplication.getInstance().getService().send(msg);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
     }
 
-    public void stop() {
+    public void stop(){
         Message msg = Message.obtain(null, LocalService.STOP, 0, 0);
         try {
-            mService.send(msg);
+            MainApplication.getInstance().getService().send(msg);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
