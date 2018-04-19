@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity implements IndoorsServiceCal
 
     private Indoors indoors;
     public static final String TAG = "SGIND";
+    Building mBuilding;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,6 +76,7 @@ public class MainActivity extends AppCompatActivity implements IndoorsServiceCal
 
     @Override
     public void buildingLoaded(Building building) {
+        mBuilding = building;
         Log.d(TAG, building.getName() + " <- building loaded");
     }
 
